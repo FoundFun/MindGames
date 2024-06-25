@@ -1,11 +1,12 @@
+using Player.Scripts;
 using UnityEngine;
 
 namespace Wall.Scripts
 {
-    [CreateAssetMenu(fileName = "WallConfig", menuName = "GameConfig/WallConfig", order = 51)]
+    [CreateAssetMenu(fileName = "WallConfig", menuName = "GameConfig/WallConfig", order = 0)]
     public class WallConfig : ScriptableObject
     {
-        [field: SerializeField] public GameObject Prefab { get; private set; }
-        [field: SerializeField] public Color32 Color { get; private set; }
+        [field: SerializeField] public TakeObject Prefab { get; private set; }
+        [field: SerializeField] public ColorTag Color { get; private set; }
     }
 }

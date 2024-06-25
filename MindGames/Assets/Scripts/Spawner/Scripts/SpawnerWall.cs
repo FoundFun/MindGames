@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Player.Scripts;
 using UnityEngine;
 using Wall.Scripts;
 
@@ -9,29 +10,33 @@ namespace Spawner.Scripts
     {
         private readonly SpawnerWallConfig _spawnerWallConfig;
         
-        private List<GameObject> _targetStackWalls = new List<GameObject>();
+        private List<WallConfig> _targetStackWalls = new List<WallConfig>();
 
         public SpawnerWall(SpawnerWallConfig spawnerWallConfig)
         {
             _spawnerWallConfig = spawnerWallConfig;
         }
   
-        public Task<List<Color>> SpawnTargetWall(List<WallConfig> wallConfigs, Transform targetPoint)
+        public Task<List<ColorTag>> SpawnTargetWall(List<WallConfig> wallConfigs, Transform targetPoint)
         {
-            List<Color> colors = new List<Color>();
+            List<ColorTag> colors = new List<ColorTag>();
             
-            for (int y = 0; y < _spawnerWallConfig.Height; ++y)
+            for (int i = 0; i < _spawnerWallConfig.Height; ++i)
             {
-                for (int z = 0; z < _spawnerWallConfig.Width; ++z)
+                for (int j = 0; j < _spawnerWallConfig.Width; ++j)
                 {
                     int index = Random.Range(0, wallConfigs.Count);
-                    
-                    Object.Instantiate(wallConfigs[index].Prefab,
-                        new Vector3(targetPoint.position.x, targetPoint.position.y + y,targetPoint.position.z + z),
+
+                    TakeObject takeObject = Object.Instantiate(wallConfigs[index].Prefab,
+                        new Vector3(targetPoint.position.x, targetPoint.position.y + i,targetPoint.position.z + j),
                         Quaternion.identity, targetPoint);
                     
-                    colors.Add(wallConfigs[index].Color);
-                    _targetStackWalls.Add(wallConfigs[index].Prefab);
+                    takeObject.Initialize(wallConfigs[index].Color);
+                    takeObject.Freeze();
+                    takeObject.IsTake(false);
+
+                    colors.Add(takeObject.TargetColor);
+                    _targetStackWalls.Add(wallConfigs[index]);
                 }
             }
 
@@ -42,30 +47,43 @@ namespace Spawner.Scripts
         {
             for (int i = 0; i < _targetStackWalls.Count; i++)
             {
-                var x = Random.Range(1, 5);
-                var z = Random.Range(1, 5);
-                
-                Object.Instantiate(_targetStackWalls[i],
-                    new Vector3(targetPoint.position.x + x, targetPoint.position.y,targetPoint.position.z + z),
+                var randomPositionX = Random.Range(1, 5);
+                var randomPositionZ = Random.Range(1, 5);
+
+                TakeObject takeObject = Object.Instantiate(_targetStackWalls[i].Prefab,
+                    new Vector3(targetPoint.position.x + randomPositionX, targetPoint.position.y,targetPoint.position.z + randomPositionZ),
                     Quaternion.identity, targetPoint);
+                
+                takeObject.Initialize(_targetStackWalls[i].Color);
             }
             
             return Task.CompletedTask;
         }
 
-        public Task SpawnCurrentWall(WallConfig transparentWallConfigs, Transform targetPoint)
+        public Task<IReadOnlyList<TransparentObject>> SpawnCurrentWall(TransparentObject transparentWallConfigs, Transform targetPoint,
+            List<ColorTag> targetGameColors)
         {
-            for (int y = 0; y < _spawnerWallConfig.Height; ++y)
+            List<TransparentObject> transparentObjects = new List<TransparentObject>();
+
+            var counter = 0;
+            
+            for (int i = 0; i < _spawnerWallConfig.Height; ++i)
             {
-                for (int z = 0; z < _spawnerWallConfig.Width; ++z)
+                for (int j = 0; j < _spawnerWallConfig.Width; ++j)
                 {
-                    Object.Instantiate(transparentWallConfigs.Prefab,
-                        new Vector3(targetPoint.position.x, targetPoint.position.y + y,targetPoint.position.z + z),
+                    TransparentObject transparentObject = Object.Instantiate(transparentWallConfigs,
+                        new Vector3(targetPoint.position.x, targetPoint.position.y + i,targetPoint.position.z + j),
                         Quaternion.identity, targetPoint);
+
+                    transparentObject.SetColor(targetGameColors[counter]);
+                    transparentObjects.Add(transparentObject);
+                    counter++;
                 }
             }
 
-            return Task.CompletedTask;
+            IReadOnlyList<TransparentObject> readOnlyList = transparentObjects;
+
+            return Task.FromResult(readOnlyList);
         }
     }
 }

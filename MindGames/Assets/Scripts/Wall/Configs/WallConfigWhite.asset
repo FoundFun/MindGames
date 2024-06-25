@@ -12,7 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fecebc137d99427e9fd703bff28de310, type: 3}
   m_Name: WallConfigWhite
   m_EditorClassIdentifier: 
-  <Prefab>k__BackingField: {fileID: 7854517011703323192, guid: c9752022afb3f1945b7f2ec2dfa48c4f, type: 3}
-  <Color>k__BackingField:
-    serializedVersion: 2
-    rgba: 16777215
+  <Prefab>k__BackingField: {fileID: -3946771221089922262, guid: c9752022afb3f1945b7f2ec2dfa48c4f, type: 3}
+  <Color>k__BackingField: 1
