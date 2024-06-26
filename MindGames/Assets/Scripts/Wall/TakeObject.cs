@@ -1,9 +1,8 @@
-using Unity.Netcode;
 using UnityEngine;
 
-namespace Player.Scripts
+namespace Wall
 {
-    public class TakeObject : NetworkBehaviour
+    public class TakeObject : MonoBehaviour
     {
         private Rigidbody _rigidbody;
         private Transform _playerItemPosition;

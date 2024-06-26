@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Wall;
 
 namespace Player.Scripts
 {

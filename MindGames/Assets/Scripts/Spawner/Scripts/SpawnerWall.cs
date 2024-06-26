@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Player.Scripts;
 using UnityEngine;
+using Wall;
 using Wall.Scripts;
 
 namespace Spawner.Scripts
