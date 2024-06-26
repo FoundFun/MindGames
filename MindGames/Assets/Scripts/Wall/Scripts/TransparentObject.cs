@@ -6,16 +6,11 @@ namespace Wall.Scripts
 {
     public class TransparentObject : MonoBehaviour
     {
-        public ColorTag _targetColor;
+        private ColorTag _targetColor;
 
-        public bool IsComplete;
+        public bool IsComplete { get; private set; }
 
         public event Action CompleteChanged;
-
-        public void SetColor(ColorTag targetGameColors)
-        {
-            _targetColor = targetGameColors;
-        }
 
         private void OnTriggerEnter(Collider other)
         {
@@ -33,6 +28,11 @@ namespace Wall.Scripts
                 IsComplete = false;
                 CompleteChanged?.Invoke();
             }
+        }
+
+        public void SetColor(ColorTag targetGameColors)
+        {
+            _targetColor = targetGameColors;
         }
     }
 }

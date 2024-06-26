@@ -1,9 +1,10 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Player.Scripts
 {
-    public class PlayerMouseController : MonoBehaviour
+    public class PlayerMouseController : NetworkBehaviour
     {
         [SerializeField] private Transform _playerItemPosition;
         [SerializeField] private float _distance = 5f;
@@ -31,6 +32,11 @@ namespace Player.Scripts
 
         private void OnTake(InputAction.CallbackContext obj)
         {
+            if (!IsOwner)
+            {
+                return;
+            }
+            
             if (_currentTakeObject != null)
             {
                 _currentTakeObject.Throw();

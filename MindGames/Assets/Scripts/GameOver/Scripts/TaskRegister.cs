@@ -37,6 +37,7 @@ namespace GameOver.Scripts
             if (unCompleteValue <= 0)
             {
                 _gameOverScreen.SetActive(true);
+                Dispose();
             }
         }
     }

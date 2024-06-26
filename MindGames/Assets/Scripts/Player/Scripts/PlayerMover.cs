@@ -1,9 +1,10 @@
 using Player.Configs;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Player.Scripts
 {
-    public class PlayerMover : MonoBehaviour
+    public class PlayerMover : NetworkBehaviour
     {
         [SerializeField] private PlayerConfig _playerConfig;
         [SerializeField] private Rigidbody _rigidbody;
@@ -28,12 +29,22 @@ namespace Player.Scripts
 
         private void Update()
         {
+            if (!IsOwner)
+            {
+                return;
+            }
+            
             _direction = transform.forward * _playerInput.Player.Move.ReadValue<Vector2>().y
                          + transform.right * _playerInput.Player.Move.ReadValue<Vector2>().x;
         }
 
         private void FixedUpdate()
         {
+            if (!IsOwner)
+            {
+                return;
+            }
+            
             _rigidbody.MovePosition(_rigidbody.position + _direction.normalized * _playerConfig.Speed * Time.fixedDeltaTime);
         }
     }
